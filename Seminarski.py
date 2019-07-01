@@ -118,12 +118,33 @@ def bnb(matricaCena, korisnici, resursi, indeksKorisnika, trenutnaCena, putanja 
 #              matricaCena[i][j]*X. Primer, od resursa 1 do korisnika 3 cena po komadu je 3 i zelimo da posaljemo 
 #              100, nasa cena je 3*100=300.
 
-resursi = [Resurs(1000, 500, False), Resurs(1000, 500, False), Resurs(1000, 500, False)]
+#resursi = [Resurs(1000, 500, False), Resurs(1000, 500, False), Resurs(1000, 500, False)]
+#korisnici = [Korisnik(80), Korisnik(270), Korisnik(250), Korisnik(160), Korisnik(180)]
+#matricaCena = np.array([[4, 5, 6, 8, 10], [6, 4, 3, 5, 8], [9, 7, 4, 3, 4]])
 
-korisnici = [Korisnik(80), Korisnik(270), Korisnik(250), Korisnik(160), Korisnik(180)]
-
-matricaCena = np.array([[4, 5, 6, 8, 10], [6, 4, 3, 5, 8], [9, 7, 4, 3, 4]])
-
+#ulaz je morao biti malo formatiran radi lakseg citanja.
+podaci = open('ulaz.txt', 'r')
+linija = podaci.readlines()
+#na pocetku ulaza se nalazi informacija o tome koliko resursa i korisnika imamo
+brojResursa = int(linija[0].strip().split(' ')[0])
+brojKorisnika = int(linija[0].strip().split(' ')[1])
+resursi = []
+korisnici = []
+k = 0
+matricaCena = np.empty([brojResursa, brojKorisnika])
+#iz fajla generisemo listu resursa
+for i in range(1, brojResursa+1):
+    aktivacija = float(linija[i].strip().split(' ')[1])
+    kapacitet = float(linija[i].strip().split(' ')[0])
+    resursi.append(Resurs(aktivacija, kapacitet,False))
+#iz fajla generisemo listu korisnika i matricu cena
+for i in range(brojResursa+1, brojKorisnika*2+brojResursa+1):
+    if i % 2 == 1:
+        korisnici.append(Korisnik(float(linija[i].strip())))
+    elif i % 2 == 0:
+        for j in range(0, brojResursa):
+            matricaCena[j][k] = float(linija[i].strip().split(' ')[j])
+        k += 1
 
 # for r in resursi:
 #     print(r.cenaAktivacije, r.resursAktiviran, r.dostupnoResursa)
